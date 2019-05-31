@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext } from 'react';
+import { EE } from './EventEmitter';
 import { ACTION_TYPES } from './Actions';
 
 
@@ -6,12 +6,14 @@ const init_state = {
     count: 0,
 };
 
+let mutableState = init_state
+
 /**
  * @param { typeof init_state } oldState 
  * @param { IAction } param1 
  */
-const reducer = (oldState = init_state, { type, payload }) => {
-    const state = { ...oldState }
+const reducer = ({ type, payload }) => {
+    const state = { ...mutableState }
 
     console.warn({ type, payload })
 
@@ -27,28 +29,23 @@ const reducer = (oldState = init_state, { type, payload }) => {
     return state
 }
 
-/** @type { [ typeof init_state, (action: IAction) => void ] } */
-export const StoreContext = createContext([init_state, reducer]);
 
-export const useStore = () => {
-    /** @type { typeof StoreContext[0] } */
-    const state = useContext(StoreContext)[0]
+export const useFlux = () => {
+    const onChange = cb => {
+        EE.on('store_change', cb)
 
-    return state
-};
+        return () => EE.off('store_change', cb)
+    }
 
-export const Store = ({ children }) => {
-
-    const [state, dispatcher] = useReducer(reducer, init_state)
-
-    return (
-        <StoreContext.Provider value={[state, dispatcher]}>
-            {children}
-        </StoreContext.Provider>
-    )
+    return [{ ...mutableState }, onChange]
 }
 
 
+EE.on('dispatch', payload => {
+    mutableState = reducer(payload)
+
+    EE.emit('store_change', mutableState)
+})
 
 /**
  * @typedef IAction

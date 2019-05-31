@@ -1,4 +1,4 @@
-import { useDispatcher } from "./dispatcher";
+import { dispatch } from "./dispatcher";
 
 const ACTION_TYPES_DECLARATIONS = {
     ADD_COUNTER: 0,
@@ -10,23 +10,26 @@ const ACTION_TYPES_ARRAY = Object.keys(ACTION_TYPES_DECLARATIONS)
 
 
 /**
- * @param { import("./dispatcher").IDispatcher } dispatcher 
  * @return { IDecoratedActions }
  */
-const reduceTypes = dispatcher => ACTION_TYPES_ARRAY
-    .reduce(
-        (acc, type) => ({
-            ...acc,
-            [type]: payload => dispatcher({ type, payload })
-        }),
-        {}
-    )
+const reduceTypes = () => {
+    const fn = type => payload => {
+        const action = { type, payload }
 
+        dispatch(action)
+    }
 
-/** @type { IDecoratedActions  } */
+    return ACTION_TYPES_ARRAY
+        .reduce(
+            (acc, type) => ({ ...acc, [type]: fn(type) }),
+            {}
+        )
+}
+
+/** @type { IDecoratedActions } */
 let reducedTypes
 
-export const useActions = () => reducedTypes || (reducedTypes = reduceTypes(useDispatcher()))
+export const useActions = () => reducedTypes || (reducedTypes = reduceTypes())
 
 
 export const ACTION_TYPES = ACTION_TYPES_ARRAY

@@ -1,12 +1,5 @@
-import { useContext } from 'react';
+import { EE } from './EventEmitter'
 
-import { StoreContext } from "./Store";
+export const dispatch = (action) => EE.emit('dispatch', action)
 
-export const useDispatcher = () => {
-    /** @type { IDispatcher } */
-    const dispatcher = useContext(StoreContext)[1]
-
-    return dispatcher
-};
-
-/** @typedef { typeof StoreContext[1] } IDispatcher */
+console.log(dispatch)

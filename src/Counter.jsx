@@ -1,24 +1,29 @@
-import React, { useState } from 'react'
-import { useStore } from './Store';
+import React, { useState, useEffect } from 'react'
 import { useActions } from './Actions';
+import { useFlux } from './Store';
 
 export const Counter = () => {
     const [localCount, setLocalCount] = useState(0)
-    
-    const store = useStore();
+
+    const [storeState, onChange] = useFlux()
+    const [state, setState] = useState(storeState);
+
+    useEffect(() => onChange(setState), [])
+
     const { ADD_COUNTER } = useActions();
-    
-    const click = () => ADD_COUNTER(store.count || 1)
+
+    const click = () => ADD_COUNTER(state.count || 1)
     const localAdd = () => setLocalCount(localCount + localCount || 1)
 
     return (
         <>
-            <code>Store - {JSON.stringify(store)}</code>
+            <code>Store - {JSON.stringify(state)}</code>
+            <br />
 
             <br />
 
             <button onClick={click}>add global</button>
-            <code>Counter - {store.count}</code>
+            <code>Counter - {state.count}</code>
 
             <br />
 
