@@ -1,11 +1,6 @@
 import React, { createContext, useReducer, useContext } from 'react';
 import { ACTION_TYPES } from './Actions';
 
-/**
- * @typedef IAction
- * @property { import('./Actions').TYPES } type
- * @property { import('./Actions').PAYLOAD_TYPE<import('./Actions').TYPES> } payload
- */
 
 const init_state = {
     count: 0,
@@ -55,3 +50,8 @@ export const Store = ({ children }) => {
 
 
 
+/**
+ * @typedef IAction
+ * @property { import('./Actions').TYPES } type
+ * @property { import('./Actions').PAYLOAD_TYPE<import('./Actions').TYPES> } payload
+ */
