@@ -37,7 +37,9 @@ export const useFlux = () => {
         return () => EE.off('store_change', cb)
     }
 
-    return [{ ...mutableState }, onChange]
+    const getStore = () => ({ ...mutableState })
+
+    return [getStore, onChange]
 }
 
 

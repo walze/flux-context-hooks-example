@@ -5,8 +5,8 @@ import { useFlux } from './Store';
 export const Counter = () => {
     const [localCount, setLocalCount] = useState(0)
 
-    const [store, onChange] = useFlux()
-    const [state, setState] = useState(store);
+    const [getStore, onChange] = useFlux()
+    const [state, setState] = useState(getStore());
 
     useEffect(() => onChange(setState), [])
 
