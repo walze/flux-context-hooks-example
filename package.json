@@ -11,7 +11,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "parcel index.html --log-level 4 --no-cache"
+    "start": "parcel index.html --log-level 4 --no-cache",
+    "build": "parcel build index.html --log-level 4 --no-cache --detailed-report --public-url . --out-dir ./build/flux"
   },
   "author": "",
   "license": "ISC"
