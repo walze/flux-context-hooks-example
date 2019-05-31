@@ -18,7 +18,6 @@ export const Counter = () => {
     return (
         <>
             <code>Store - {JSON.stringify(state)}</code>
-            <br />
 
             <br />
 
