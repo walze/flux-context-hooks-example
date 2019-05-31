@@ -12,19 +12,14 @@ const ACTION_TYPES_ARRAY = Object.keys(ACTION_TYPES_DECLARATIONS)
 /**
  * @return { IDecoratedActions }
  */
-const reduceTypes = () => {
-    const fn = type => payload => {
-        const action = { type, payload }
-
-        dispatch(action)
-    }
-
-    return ACTION_TYPES_ARRAY
-        .reduce(
-            (acc, type) => ({ ...acc, [type]: fn(type) }),
-            {}
-        )
-}
+const reduceTypes = () => ACTION_TYPES_ARRAY
+    .reduce(
+        (acc, type) => ({
+            ...acc,
+            [type]: dispatch({ type, payload })
+        }),
+        {}
+    )
 
 /** @type { IDecoratedActions } */
 let reducedTypes
