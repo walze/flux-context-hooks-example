@@ -14,10 +14,11 @@ const ACTION_TYPES_ARRAY = Object.keys(ACTION_TYPES_DECLARATIONS)
  */
 const reduceTypes = () => ACTION_TYPES_ARRAY
     .reduce(
-        (acc, type) => ({
-            ...acc,
-            [type]: payload => dispatch({ type, payload })
-        }),
+        (acc, type) => {
+            const dispatchFn = payload => dispatch({ type, payload })
+
+            return { ...acc, [type]: dispatchFn }
+        },
         {}
     )
 
