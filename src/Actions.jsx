@@ -16,7 +16,7 @@ const reduceTypes = () => ACTION_TYPES_ARRAY
     .reduce(
         (acc, type) => ({
             ...acc,
-            [type]: dispatch({ type, payload })
+            [type]: payload => dispatch({ type, payload })
         }),
         {}
     )
