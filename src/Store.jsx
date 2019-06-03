@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+
 import { EE } from './EventEmitter';
 import { ACTION_TYPES } from './Actions';
 
@@ -40,6 +42,28 @@ export const useFlux = () => {
     const getStore = () => ({ ...mutableState })
 
     return [getStore, onChange]
+}
+
+
+/**
+ * @template T, S
+ * @param { (props: S) => T } c 
+ */
+export const usesStore = c => {
+    const [getStore, onChange] = useFlux()
+
+    /**
+     * @param { S } props 
+     */
+    const newComponent = (props) => {
+        const [state, setState] = useState(getStore());
+
+        useEffect(() => onChange(setState), [])
+
+        return c({ ...props, store: state })
+    }
+
+    return newComponent
 }
 
 
