@@ -76,5 +76,5 @@ EE.on('dispatch', payload => {
 /**
  * @typedef IAction
  * @property { import('./Actions').TYPES } type
- * @property { import('./Actions').PAYLOAD_TYPE<import('./Actions').TYPES> } payload
+ * @property { import('./Actions').PAYLOAD_TYPE[import('./Actions').TYPES] } payload
  */

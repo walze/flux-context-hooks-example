@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "checkJs": true,
+        "allowUnusedLabels": true,
+        "alwaysStrict": true,
+        "jsx": "react",
+        "noEmitOnError": true,
+        "diagnostics": true
+    },
+    "typeAcquisition": {
+        "enable": true,
+        "exclude": ["./node_module"]
+    }
+}

@@ -6,6 +6,9 @@ const ACTION_TYPES_DECLARATIONS = {
     TEST: '',
 }
 
+/**
+ * @type { Array<keyof typeof ACTION_TYPES_DECLARATIONS> }
+ */
 const ACTION_TYPES_ARRAY = Object.keys(ACTION_TYPES_DECLARATIONS)
 
 
@@ -34,12 +37,11 @@ export const ACTION_TYPES = ACTION_TYPES_ARRAY
 
 
 /**
- * @typedef { { [K in TYPES]: (payload: PAYLOAD_TYPE<K>) => void } } IDecoratedActions
+ * @typedef { { [K in TYPES]: (payload: PAYLOAD_TYPE[K]) => void } } IDecoratedActions
  */
 
 /**
- * @template T
- * @typedef { typeof ACTION_TYPES_DECLARATIONS[T] } PAYLOAD_TYPE
+ * @typedef { typeof ACTION_TYPES_DECLARATIONS } PAYLOAD_TYPE
  */
 
 /**
