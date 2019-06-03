@@ -31,19 +31,21 @@ const reducer = ({ type, payload }) => {
     return state
 }
 
+/**
+ * @param { import('eventemitter3').ListenerFn } cb 
+ */
+const onStoreChange = cb => {
+    EE.on('store_change', cb)
 
-export const useFlux = () => {
-    const onChange = cb => {
-        EE.on('store_change', cb)
-
-        return () => EE.off('store_change', cb)
-    }
-
-    const getStore = () => ({ ...mutableState })
-
-    return [getStore, onChange]
+    return () => EE.off('store_change', cb)
 }
 
+const getStore = () => ({ ...mutableState })
+
+/**
+ * @returns { [typeof getStore, typeof onStoreChange] }
+ */
+export const useFlux = () => [getStore, onStoreChange]
 
 /**
  * @template T, S

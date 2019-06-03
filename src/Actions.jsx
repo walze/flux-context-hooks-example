@@ -6,15 +6,14 @@ const ACTION_TYPES_DECLARATIONS = {
     TEST: '',
 }
 
-/**
- * @type { Array<keyof typeof ACTION_TYPES_DECLARATIONS> }
- */
-const ACTION_TYPES_ARRAY = Object.keys(ACTION_TYPES_DECLARATIONS)
+const ACTION_TYPES_ARRAY = objectKeys(ACTION_TYPES_DECLARATIONS)
 
 
 /**
- * @return { IDecoratedActions }
+ * @type { IDecoratedActions }
  */
+let typesStartValue
+
 const reduceTypes = () => ACTION_TYPES_ARRAY
     .reduce(
         (acc, type) => {
@@ -22,7 +21,7 @@ const reduceTypes = () => ACTION_TYPES_ARRAY
 
             return { ...acc, [type]: dispatchFn }
         },
-        {}
+        typesStartValue
     )
 
 /** @type { IDecoratedActions } */
@@ -30,9 +29,13 @@ let reducedTypes
 
 export const useActions = () => reducedTypes || (reducedTypes = reduceTypes())
 
+/**
+ * @type { { [K in TYPES]: K } }
+ */
+let typesStart
 
 export const ACTION_TYPES = ACTION_TYPES_ARRAY
-    .reduce((acc, type) => ({ ...acc, [type]: type }), {})
+    .reduce((acc, type) => ({ ...acc, [type]: type }), typesStart)
 
 
 
