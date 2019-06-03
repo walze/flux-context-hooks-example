@@ -49,7 +49,7 @@ export const useFlux = () => {
  * @template T, S
  * @param { (props: S) => T } c 
  */
-export const usesStore = c => {
+export const connectStore = c => {
     const [getStore, onChange] = useFlux()
 
     /**

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useActions } from './Actions';
-import { usesStore } from './Store';
+import { connectStore } from './Store';
 
 
-export const Counter = usesStore(({ store }) => {
+export const Counter = connectStore(({ store }) => {
     const [localCount, setLocalCount] = useState(0)
 
     const { ADD_COUNTER } = useActions();
