@@ -11,11 +11,13 @@ const init_state = {
 let mutableState = init_state
 
 /**
- * @param { typeof init_state } oldState 
- * @param { IAction } param1 
+ * @param { IAction } action 
  */
-const reducer = ({ type, payload }) => {
+const reducer = (action) => {
     const state = { ...mutableState }
+
+    const type = action.type
+    const payload = action.payload
 
     console.warn({ type, payload })
 
@@ -49,13 +51,13 @@ export const useFlux = () => [getStore, onStoreChange]
 
 /**
  * @template T, S
- * @param { (props: S) => T } c 
+ * @param { (props: {store: typeof init_state} & S) => T } c 
  */
 export const connectStore = c => {
     const [getStore, onChange] = useFlux()
 
     /**
-     * @param { S } props 
+     * @param { S } props
      */
     const newComponent = (props) => {
         const [state, setState] = useState(getStore());
@@ -78,5 +80,5 @@ EE.on('dispatch', payload => {
 /**
  * @typedef IAction
  * @property { import('./Actions').TYPES } type
- * @property { import('./Actions').PAYLOAD_TYPE[import('./Actions').TYPES] } payload
+ * @property { import('./Actions').PAYLOAD_TYPE[IAction["type"]] } payload
  */
