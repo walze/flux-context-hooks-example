@@ -50,14 +50,14 @@ const getStore = () => ({ ...mutableState })
 export const useFlux = () => [getStore, onStoreChange]
 
 /**
- * @template T, S
- * @param { (props: {store: typeof init_state} & S) => T } c 
+ * @template T
+ * @param { (props: {store: typeof init_state} & T) => JSX.Element } c 
  */
 export const connectStore = c => {
     const [getStore, onChange] = useFlux()
 
     /**
-     * @param { S } props
+     * @param { T } props
      */
     const newComponent = (props) => {
         const [state, setState] = useState(getStore());

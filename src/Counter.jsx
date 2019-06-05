@@ -2,14 +2,6 @@ import React, { useState } from 'react'
 import { useActions } from './Actions';
 import { connectStore } from './Store';
 
-/**
- * @typedef { typeof connectStore } nice
- */
-
-/**
- * @template T
- * @type { ReturnType<nice> }
- */
 export const Counter = connectStore(({ store }) => {
     const [localCount, setLocalCount] = useState(0)
 

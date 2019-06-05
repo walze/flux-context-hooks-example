@@ -2,7 +2,7 @@
  * @template T
  * @param { T } obj
  */
-const objectKeys = (obj) => {
+export const objectKeys = (obj) => {
     const keys = []
 
     for (const key in obj) if (obj.hasOwnProperty(key)) {

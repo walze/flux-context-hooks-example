@@ -1,4 +1,5 @@
 import { dispatch } from "./dispatcher";
+import { objectKeys } from './helpers'
 
 const ACTION_TYPES_DECLARATIONS = {
     ADD_COUNTER: 0,
@@ -24,10 +25,12 @@ const reduceTypes = () => ACTION_TYPES_ARRAY
         typesStartValue
     )
 
-/** @type { IDecoratedActions } */
-let reducedTypes
+export const useActions = (() => {
+    /** @type { IDecoratedActions } */
+    const reducedTypes = reduceTypes()
 
-export const useActions = () => reducedTypes || (reducedTypes = reduceTypes())
+    return () => reducedTypes
+})()
 
 /**
  * @type { { [K in TYPES]: K } }
