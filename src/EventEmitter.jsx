@@ -12,10 +12,11 @@ class EventEmitter {
      */
     on(event, listener) { // add event listeners
         if (!this._events[event])
-            return this._events[event] = [listener]
-
+            this._events[event] = []
 
         this._events[event].push(listener);
+
+        return () => this.off(event, listener)
     }
 
     off(event, listener) { // remove listeners

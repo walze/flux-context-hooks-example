@@ -36,11 +36,7 @@ const reducer = (action) => {
 /**
  * @param { import('eventemitter3').ListenerFn } cb 
  */
-const onStoreChange = cb => {
-    EE.on('store_change', cb)
-
-    return () => EE.off('store_change', cb)
-}
+const onStoreChange = cb => EE.on('store_change', cb)
 
 const getStore = () => ({ ...mutableState })
 
