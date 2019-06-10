@@ -14,20 +14,16 @@ let mutableState = init_state
  * @param { IAction } action 
  */
 const reducer = (action) => {
+    const {
+        ADD_COUNTER,
+        REMOVE_COUNTER,
+        TEST
+    } = action
+
     const state = { ...mutableState }
 
-    const type = action.type
-    const payload = action.payload
-
-    console.warn({ type, payload })
-
-    switch (type) {
-        case ACTION_TYPES.ADD_COUNTER:
-            state.count += payload
-            break;
-
-        default:
-            throw new Error(`unknown type ${type}`)
+    if (ADD_COUNTER) {
+        state.count += ADD_COUNTER
     }
 
     return state
@@ -67,16 +63,16 @@ export const connectStore = c => {
 }
 
 
-EE.on('dispatch', payload => {
-    mutableState = reducer(payload)
+EE.on('dispatch', ({ type, payload }) => {
+    if (!(type in ACTION_TYPES)) throw new Error(`Unknown type ${type}`)
+
+    mutableState = reducer({ [type]: payload })
 
     EE.emit('store_change', mutableState)
 })
 
 /**
- * @typedef IAction
- * @property { import('./Actions').TYPES } type
- * @property { import('./Actions').PAYLOAD_TYPE[IAction["type"]] } payload
+ * @typedef { Partial<{ [K in import('./Actions').TYPES]: import('./Actions').PAYLOAD_TYPE[K] }> } IAction
  */
 
 /**
