@@ -2,10 +2,14 @@ import React, { useState } from 'react'
 import { useActions } from './Actions';
 import { connectStore } from './Store';
 
-export const Counter = connectStore(({ store }) => {
-    const [localCount, setLocalCount] = useState(0)
-
+/**
+ * @param { import('./Store').ConnectedStore<{nice: string}> } props 
+ */
+const counter = (props) => {
+    const { store } = props
     const { ADD_COUNTER } = useActions();
+
+    const [localCount, setLocalCount] = useState(0)
 
     const click = () => ADD_COUNTER(store.count || 1)
     const localAdd = () => setLocalCount(localCount + localCount || 1)
@@ -25,4 +29,6 @@ export const Counter = connectStore(({ store }) => {
             <code>Local Counter - {localCount}</code>
         </>
     );
-})
+}
+
+export const Counter = connectStore(counter)

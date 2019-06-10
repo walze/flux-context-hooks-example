@@ -46,14 +46,14 @@ const getStore = () => ({ ...mutableState })
 export const useFlux = () => [getStore, onStoreChange]
 
 /**
- * @template T
- * @param { (props: {store: typeof init_state} & T) => JSX.Element } c 
+ * @template P
+ * @param { (props: ConnectedStore<P>) => JSX.Element } c 
  */
 export const connectStore = c => {
     const [getStore, onChange] = useFlux()
 
     /**
-     * @param { T } props
+     * @param { P } props
      */
     const newComponent = (props) => {
         const [state, setState] = useState(getStore());
@@ -77,4 +77,9 @@ EE.on('dispatch', payload => {
  * @typedef IAction
  * @property { import('./Actions').TYPES } type
  * @property { import('./Actions').PAYLOAD_TYPE[IAction["type"]] } payload
+ */
+
+/**
+ * @template P
+ * @typedef { P & { store: typeof init_state}} ConnectedStore
  */
