@@ -4,7 +4,7 @@ import { objectKeys } from './helpers'
 const ACTION_TYPES_DECLARATIONS = {
     ADD_COUNTER: 0,
     REMOVE_COUNTER: 0,
-    TEST: '',
+    REPEAT_WORD: '',
 }
 
 const ACTION_TYPES_ARRAY = objectKeys(ACTION_TYPES_DECLARATIONS)
