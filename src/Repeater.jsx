@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useActions } from './Actions';
-import { connectStore } from './Store';
-
+import { generalStore } from './GeneralStore';
 
 
 /**
- * @param { import('./Store').ConnectedStore<IRepeaterProps> } props 
+ * @type {  import('./generics/Store').ConnectedStore<IRepeaterProps, typeof generalStore["state"]>
+ *  }
  */
 const repeater = (props) => {
   const { store, word } = props
@@ -42,8 +42,7 @@ const repeater = (props) => {
   );
 }
 
-export const Repeater = connectStore(repeater)
-
+export const Repeater = generalStore.connect(repeater)
 
 
 /**

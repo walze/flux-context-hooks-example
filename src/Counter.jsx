@@ -1,54 +1,54 @@
 import React, { useState } from 'react'
 import { useActions } from './Actions';
-import { connectStore } from './Store';
-
+import { generalStore } from './GeneralStore';
 
 
 /**
- * @param { import('./Store').ConnectedStore<ICounterProps> } props 
+ * @type { import('./generics/Store').ConnectedStore<ICounterProps, typeof generalStore["state"]> }
  */
 const counter = (props) => {
-    const { store, index } = props
-    const { ADD_COUNTER } = useActions();
+  const { store, num } = props
+  const { ADD_COUNTER } = useActions();
 
-    const [localCount, setLocalCount] = useState(0)
-    const localAdd = () => setLocalCount(localCount + localCount || 1)
+  const [localCount, setLocalCount] = useState(0)
+  const localAdd = () => setLocalCount(localCount + localCount || 1)
 
-    const click = () => ADD_COUNTER(store.count || 1)
+  const click = () => ADD_COUNTER(store.count || 1)
 
-    const storeJSON = JSON.stringify(store)
+  const storeJSON = JSON.stringify(store)
 
-    console.log('counter rendered')
+  console.log('counter rendered')
 
-    return (
-        <>
-            <p>Index - {index}</p>
-            <code>Store - {storeJSON}</code>
+  return (
+    <>
+      <p>num - {num}</p>
+      <code>Store - {storeJSON}</code>
 
-            <br />
-            <br />
+      <br />
+      <br />
 
-            <button onClick={click}>add global</button>
-            <code>Counter - {store.count}</code>
+      <button onClick={click}>add global</button>
+      <code>Counter - {store.count}</code>
 
-            <br />
+      <br />
 
-            <button onClick={localAdd}>add counter</button>
-            <code>Local Counter - {localCount}</code>
+      <button onClick={localAdd}>add counter</button>
+      <code>Local Counter - {localCount}</code>
 
-            <br />
-            <br />
-            <br />
-        </>
-    );
+      <br />
+      <br />
+      <br />
+    </>
+  );
 }
 
-export const Counter = connectStore(counter)
-
+export const Counter = generalStore.connect(
+  counter,
+)
 
 
 /**
  * @typedef { {
- *      index: number,
+ *      num: number,
  *  } } ICounterProps
  */
