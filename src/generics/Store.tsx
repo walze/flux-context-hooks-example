@@ -61,7 +61,8 @@ export abstract class Store<S extends Object> {
         )
 
         // updates state depending if changed
-        setState(newState)
+        if (newState !== state)
+          setState(newState)
       }))
 
       useEffect(onStoreChange, [])

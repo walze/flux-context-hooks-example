@@ -2,10 +2,6 @@ class EventEmitter {
 
   private _events: { [K: string]: Function[] } = {}
 
-  /**
-   * @param { string } event
-   * @param { Function } listener
-   */
   on(event: string, listener: (...args: any[]) => any) { // add event listeners
     if (!this._events[event]) { this._events[event] = [] }
 
