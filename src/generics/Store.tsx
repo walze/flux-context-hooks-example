@@ -28,30 +28,39 @@ export abstract class Store<S extends Object> {
 
   public useFlux: () => [S, Store<S>["onChange"]] = () => [this.state, this.onChange]
 
-
+  /**
+   * Connects component to store, when store changes, component's props get updated
+   * @param component 
+   * @param listenedKeys - keys of store that are gonna be listened to
+   */
   public connect<P>(
     component: FunctionComponent<P & { store: S }>,
     listenedKeys: Array<keyof S>,
   ) {
     const MemoizedComponent = memo(component)
 
+    // builds partial state from store and memoizes it
     const initObj = this._buildPartialFromKeys(this._state, listenedKeys)
-    const memoizedState = memoize(
+    const memoizedStoreState = memoize(
       () => initObj,
       Object.values(initObj)
     )
-
+    
+    // creates new component to add props and listen to changes
     const newComponent: FunctionComponent<P & { store?: S }> = (props: P) => {
       const [state, setState] = useState(initObj);
 
       const onStoreChange = () => this.onChange((newStoreState => {
-        const intersect = this._buildPartialFromKeys(newStoreState, listenedKeys)
+        // intersects new store state with keys listened
+        const intersection = this._buildPartialFromKeys(newStoreState, listenedKeys)
 
-        const newState = memoizedState(
-          Object.values(intersect),
-          () => intersect,
+        // returns old state if no property has changed
+        const newState = memoizedStoreState(
+          Object.values(intersection),
+          () => intersection,
         )
-
+        
+        // updates state depending if changed
         setState(newState)
       }))
 
