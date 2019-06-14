@@ -30,7 +30,7 @@ export abstract class Store<S extends Object> {
 
   /**
    * Connects component to store, when store changes, component's props get updated
-   * @param component 
+   * @param component - component to be connected
    * @param listenedKeys - keys of store that are gonna be listened to
    */
   public connect<P>(
@@ -45,7 +45,7 @@ export abstract class Store<S extends Object> {
       () => initialState,
       Object.values(initialState)
     )
-    
+
     // creates new component to add props and listen to changes
     const newComponent: FunctionComponent<P & { store?: S }> = (props: P) => {
       const [state, setState] = useState(initialState);
@@ -59,7 +59,7 @@ export abstract class Store<S extends Object> {
           Object.values(intersection),
           () => intersection,
         )
-        
+
         // updates state depending if changed
         setState(newState)
       }))
