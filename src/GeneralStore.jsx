@@ -20,29 +20,22 @@ export class GeneralStore extends Store {
    * @param { import('./generics/Store').Action } action
    */
   _reduce(action) {
+    const { state } = this
     const {
       ADD_COUNTER,
       REPEAT_WORD,
     } = action
 
-    const { state } = this
 
     if (ADD_COUNTER) {
       state.count += ADD_COUNTER
-
-      return state
     }
 
     if (REPEAT_WORD) {
       state.word += REPEAT_WORD
-
-      return state
     }
 
-    // eslint-disable-next-line no-console
-    console.error('Unknown Type', action)
-
-    throw new Error('Dispached unknown type')
+    return state
   }
 }
 
