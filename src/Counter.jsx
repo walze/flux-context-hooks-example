@@ -17,7 +17,8 @@ const counter = (props) => {
 
   const storeJSON = JSON.stringify(store)
 
-  console.log('counter rendered')
+  console.log('counter rendered', props)
+
 
   return (
     <>
@@ -44,6 +45,9 @@ const counter = (props) => {
 
 export const Counter = generalStore.connect(
   counter,
+  [
+    'count',
+  ],
 )
 
 

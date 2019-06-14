@@ -18,7 +18,7 @@ const repeater = (props) => {
 
   const storeJSON = JSON.stringify(store)
 
-  console.log('repeater rendered')
+  console.log('repeater rendered', props)
 
   return (
     <>
@@ -42,7 +42,12 @@ const repeater = (props) => {
   );
 }
 
-export const Repeater = generalStore.connect(repeater)
+export const Repeater = generalStore.connect(
+  repeater,
+  [
+    'word',
+  ],
+)
 
 
 /**
