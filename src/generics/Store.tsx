@@ -26,7 +26,7 @@ export abstract class Store<S extends Object> {
 
   public onChange = (cb: (store: S) => void) => EE.on('store_change', cb)
 
-  public useFlux: () => [S, Store<S>["onChange"]] = () => [this.state, this.onChange]
+  public useFlux: () => [S, Store<S>["onChange"]] = () => [this._state, this.onChange]
 
   /**
    * Connects component to store, when store changes, component's props get updated
