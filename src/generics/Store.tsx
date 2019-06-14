@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FunctionComponent, memo, useMemo } from 'react'
+import React, { useState, useEffect, FunctionComponent, memo } from 'react'
 
 import { EE } from '../EventEmitter';
 import { TYPES, PAYLOAD_TYPE } from '../Actions'
@@ -40,15 +40,15 @@ export abstract class Store<S extends Object> {
     const MemoizedComponent = memo(component)
 
     // builds partial state from store and memoizes it
-    const initObj = this._buildPartialFromKeys(this._state, listenedKeys)
+    const initialState = this._buildPartialFromKeys(this._state, listenedKeys)
     const memoizedStoreState = memoize(
-      () => initObj,
-      Object.values(initObj)
+      () => initialState,
+      Object.values(initialState)
     )
     
     // creates new component to add props and listen to changes
     const newComponent: FunctionComponent<P & { store?: S }> = (props: P) => {
-      const [state, setState] = useState(initObj);
+      const [state, setState] = useState(initialState);
 
       const onStoreChange = () => this.onChange((newStoreState => {
         // intersects new store state with keys listened
