@@ -1,8 +1,8 @@
 import React, { useState, useEffect, FunctionComponent, memo } from 'react'
 
 import { EE } from './EventEmitter';
-import { TYPES, PAYLOAD_TYPE } from '../Actions'
 import { memoize } from '../helpers';
+import { ActionsCreator } from './ActionsCreator';
 
 export abstract class Store<S extends Object> {
   private _state: S
@@ -90,8 +90,7 @@ export abstract class Store<S extends Object> {
     return keys.reduce((partial, key) => ({ ...partial, [key]: obj[key] }), {} as Partial<T>);
   }
 
-  abstract _reduce(_: Action): S
+  abstract _reduce<T>(actions: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): S
 }
 
 export type ConnectedStore<P, S> = FunctionComponent<P & { store: S }>
-export type Action = { [K in TYPES]?: PAYLOAD_TYPE[K] }

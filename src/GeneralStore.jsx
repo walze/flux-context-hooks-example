@@ -17,7 +17,7 @@ export class GeneralStore extends Store {
   }
 
   /**
-   * @param { import('./generics/Store').Action } action
+   * @param { Partial<import('./Actions').ACTIONS_DECLARATIONS> } action
    */
   _reduce(action) {
     const { state } = this

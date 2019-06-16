@@ -7,9 +7,6 @@ const ACTION_TYPES_DECLARATIONS = {
   REPEAT_WORD: '',
 }
 
-export type PAYLOAD_TYPE = typeof ACTION_TYPES_DECLARATIONS
-export type TYPES = keyof typeof ACTION_TYPES_DECLARATIONS
-
 const actions = new ActionsCreator(ACTION_TYPES_DECLARATIONS)
 
 export const {
