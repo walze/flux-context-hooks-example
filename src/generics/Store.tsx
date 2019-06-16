@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FunctionComponent, memo } from 'react'
 
-import { EE } from '../EventEmitter';
+import { EE } from './EventEmitter';
 import { TYPES, PAYLOAD_TYPE } from '../Actions'
 import { memoize } from '../helpers';
 

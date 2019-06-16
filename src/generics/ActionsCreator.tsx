@@ -1,5 +1,5 @@
 import { objectKeys } from "../helpers";
-import { dispatch } from "../dispatcher";
+import { dispatch } from "./dispatcher";
 
 
 export type IDecoratedActions<T> = {
