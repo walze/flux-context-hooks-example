@@ -1,6 +1,6 @@
 import { EE } from './EventEmitter'
 
 /**
- * @param {unknown} action
+ * @param { { type: string, payload: unknown } } action
  */
 export const dispatch = action => EE.emit('dispatch', action)

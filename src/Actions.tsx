@@ -1,5 +1,4 @@
-import { dispatch } from "./dispatcher";
-import { objectKeys } from './helpers'
+import { ActionsCreator } from "./generics/ActionsCreator";
 
 
 const ACTION_TYPES_DECLARATIONS = {
@@ -10,33 +9,13 @@ const ACTION_TYPES_DECLARATIONS = {
 
 export type PAYLOAD_TYPE = typeof ACTION_TYPES_DECLARATIONS
 export type TYPES = keyof typeof ACTION_TYPES_DECLARATIONS
-export type IDecoratedActions = { [K in TYPES]: (payload: PAYLOAD_TYPE[K]) => void }
 
-const ACTION_TYPES_ARRAY = objectKeys(ACTION_TYPES_DECLARATIONS)
+const actions = new ActionsCreator(ACTION_TYPES_DECLARATIONS)
 
-
-let typesStartValue: IDecoratedActions
-
-const reduceTypes = () => ACTION_TYPES_ARRAY
-  .reduce(
-    (acc, type) => {
-      const dispatchFn = (payload: unknown) => dispatch({ type, payload })
-
-      return { ...acc, [type]: dispatchFn }
-    },
-    typesStartValue
-  )
-
-export const useActions = (() => {
-  const reducedTypes: IDecoratedActions = reduceTypes()
-
-  return () => reducedTypes
-})()
-
-let typesStart = {} as { [K in TYPES]: K }
-
-export const ACTION_TYPES = ACTION_TYPES_ARRAY
-  .reduce((acc, type) => ({ ...acc, [type]: type }), typesStart)
-
-
-
+export const {
+  ACTIONS_DECLARATIONS,
+  ACTION_TYPES_ARRAY,
+  useActions,
+  ACTION_TYPES,
+  batchDispatch,
+} = actions

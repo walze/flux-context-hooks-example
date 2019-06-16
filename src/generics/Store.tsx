@@ -12,7 +12,10 @@ export abstract class Store<S extends Object> {
     this._state = initialState
 
     EE.on('dispatch', ({ type, payload }) => {
-      this._state = this._reduce({ [type]: payload })
+      if (type !== 'BATCH_DISPATCH')
+        this._state = this._reduce({ [type]: payload })
+      else
+        this._state = this._reduce(payload)
 
       EE.emit('store_change', this._state)
     })
