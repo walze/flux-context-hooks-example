@@ -37,7 +37,7 @@ export abstract class Store<S extends Object> {
    * @param listenedKeys - keys of store that are gonna be listened to
    */
   public connect<P>(
-    component: FunctionComponent<P & { store: S }>,
+    component: ConnectedStore<P, S>,
     listenedKeys: Array<keyof S>,
   ) {
     const MemoizedComponent = memo(component)

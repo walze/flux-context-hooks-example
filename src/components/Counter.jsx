@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useActions } from './Actions';
-import { generalStore } from './GeneralStore';
+import { useActions } from '../flux/Actions';
+import { generalStore } from '../flux/GeneralStore';
 
 
 /**
- * @type { import('./generics/Store').ConnectedStore<ICounterProps, typeof generalStore["state"]> }
+ * @type { import('../generics/Store').ConnectedStore<ICounterProps, typeof generalStore["state"]> }
  */
 const counter = (props) => {
   const { store, num } = props

@@ -1,4 +1,4 @@
-import { ActionsCreator } from "./generics/ActionsCreator";
+import { ActionsCreator } from "../generics/ActionsCreator";
 
 
 const ACTION_TYPES_DECLARATIONS = {

@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
-import { Store } from './generics/Store'
+import { Store } from '../generics/Store'
 
 
 const initialState = {

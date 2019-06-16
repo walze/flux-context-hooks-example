@@ -1,7 +1,7 @@
 import React from 'react'
-import { Counter } from './Counter'
-import { Repeater } from './Repeater'
-import { batchDispatch } from './Actions';
+import { Counter } from './components/Counter'
+import { Repeater } from './components/Repeater'
+import { batchDispatch } from './flux/Actions';
 
 export const App = () => {
   const batch = () => batchDispatch({
