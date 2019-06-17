@@ -1,8 +1,8 @@
 import React, { useState, useEffect, FunctionComponent, memo } from 'react'
 
-import { EE } from './EventEmitter';
-import { memoize } from '../helpers';
-import { ActionsCreator } from './ActionsCreator';
+import { EE } from './EventEmitter'
+import { memoize } from '../helpers'
+import { ActionsCreator } from './ActionsCreator'
 
 export abstract class Store<S extends Object> {
   private _state: S
@@ -44,29 +44,23 @@ export abstract class Store<S extends Object> {
 
     // builds partial state from store and memoizes it
     const initialState = this._buildPartialFromKeys(this._state, listenedKeys)
-    const memoizedStoreState = memoize(
-      () => initialState,
-      Object.values(initialState)
-    )
+    const memoizedStoreState = memoize(() => initialState, Object.values(initialState))
 
     // creates new component to add props and listen to changes
-    const newComponent: FunctionComponent<P & { store?: S }> = (props: P) => {
-      const [state, setState] = useState(initialState);
+    const ConnectedComponent: FunctionComponent<P & { store?: S }> = (props: P) => {
+      const [state, setState] = useState(initialState)
 
-      const onStoreChange = () => this.onChange((newStoreState => {
+      const onStoreChange = () => this.onChange(newStoreState => {
         // intersects new store state with keys listened
         const intersection = this._buildPartialFromKeys(newStoreState, listenedKeys)
 
         // returns old state if no property has changed
-        const newState = memoizedStoreState(
-          Object.values(intersection),
-          () => intersection,
-        )
+        const newState = memoizedStoreState(Object.values(intersection), () => intersection)
 
         // updates state depending if changed
         if (newState !== state)
           setState(newState)
-      }))
+      })
 
       useEffect(onStoreChange, [])
 
@@ -74,20 +68,20 @@ export abstract class Store<S extends Object> {
     }
 
 
-    if (!newComponent.defaultProps)
-      newComponent.defaultProps = {}
+    if (!ConnectedComponent.defaultProps)
+      ConnectedComponent.defaultProps = {}
 
-    newComponent.defaultProps = {
-      ...newComponent.defaultProps,
+    ConnectedComponent.defaultProps = {
+      ...ConnectedComponent.defaultProps,
       store: listenedKeys
     }
 
-    return newComponent
+    return ConnectedComponent
   }
 
 
   private _buildPartialFromKeys<T>(obj: T, keys: (keyof T)[]) {
-    return keys.reduce((partial, key) => ({ ...partial, [key]: obj[key] }), {} as Partial<T>);
+    return keys.reduce((partial, key) => ({ ...partial, [key]: obj[key] }), {} as Partial<T>)
   }
 
   abstract _reduce<T>(actions: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): S
