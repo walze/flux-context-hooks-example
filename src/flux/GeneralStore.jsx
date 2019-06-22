@@ -5,6 +5,10 @@ import { Store } from '../generics/Store'
 const initialState = {
   count: 0,
   word: 'global',
+  obj: {
+    a: [],
+    b: '2',
+  },
 }
 
 /**

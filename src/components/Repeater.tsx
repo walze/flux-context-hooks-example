@@ -1,20 +1,23 @@
 import React, { useState } from 'react'
 import { useActions } from '../flux/Actions';
 import { generalStore } from '../flux/GeneralStore';
+import {  ConnectedStoreProps } from '../generics/Store';
 
+const asd = generalStore.createListener(state => ({
+  nice: state.word
+}))
 
 /**
- * @type {  import('../generics/Store').ConnectedStore<IRepeaterProps, typeof generalStore["state"]>
- *  }
+ * @param props 
  */
-const repeater = (props) => {
+const repeater = (props: ConnectedStoreProps<{ word: string }, ReturnType<typeof asd>>) => {
   const { store, word } = props
   const { REPEAT_WORD } = useActions();
 
   const [localWord, setLocalWord] = useState(word)
   const localRepeat = () => setLocalWord(localWord + localWord)
 
-  const click = () => REPEAT_WORD(store.word + store.word)
+  const click = () => REPEAT_WORD(store.nice + store.nice)
 
   const storeJSON = JSON.stringify(store)
 
@@ -28,7 +31,7 @@ const repeater = (props) => {
       <br />
 
       <button onClick={click}>repeat global</button>
-      <code>Word - {store.word}</code>
+      <code>Word - {store.nice}</code>
 
       <br />
 
@@ -42,11 +45,12 @@ const repeater = (props) => {
   );
 }
 
-export const Repeater = generalStore.connect(
+
+
+
+export const Repeater = generalStore.connect2(
   repeater,
-  [
-    'word',
-  ],
+  asd,
 )
 
 

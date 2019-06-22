@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+export type TkeyofT<T> = { [K in keyof T]: T[K] };
+
 export const objectKeys = <T>(obj: T & {}) => {
   const keys = []
 
