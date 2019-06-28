@@ -33,14 +33,14 @@ export abstract class Store<State extends Object> {
 
   /**
    * Connects component to store, when store changes, component's props get updated
-   * @param component - component to be connected
+   * @param Component - component to be connected
    * @param listenedKeys - keys of store that are gonna be listened to
    */
   public connect<P, T>(
-    component: FunctionComponent<P>,
+    Component: FunctionComponent<P>,
     listenerFn: storeListenerFn<State, T>,
-  ): FunctionComponent<Omit<P, "store">> {
-    const MemoizedComponent = () => memo(component) as unknown as JSX.Element
+  ) {
+    const MemoizedComponent = memo(Component) as unknown as FunctionComponent<Omit<P, "store">>
 
     // builds partial state from store and memoizes it
     const initialState = listenerFn(this.state)
@@ -64,10 +64,11 @@ export abstract class Store<State extends Object> {
 
       useEffect(onStoreChange, [])
 
-      const newProps = { ...props, store: state } as Omit<P, "store">
+      const newProps: Omit<P, "store"> = { ...props, store: state }
 
       return <MemoizedComponent {...newProps} />
     }
+
 
     return ConnectedComponent
   }
