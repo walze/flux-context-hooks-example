@@ -2,9 +2,14 @@ import React, { useState } from 'react'
 import { useActions } from '../flux/Actions';
 import { generalStore } from '../flux/GeneralStore';
 
+const listener = generalStore.createListener(state => ({
+  count: state.count,
+}))
 
 /**
- * @type { import('../generics/Store').ConnectedStore<ICounterProps, typeof generalStore["state"]> }
+ * @param { import('../generics/Store')
+ *    .ConnectedStoreProps<ICounterProps, ReturnType<typeof listener>>
+ * } props
  */
 const counter = (props) => {
   const { store, num } = props
@@ -17,8 +22,8 @@ const counter = (props) => {
 
   const storeJSON = JSON.stringify(store)
 
+  // eslint-disable-next-line no-console
   console.log('counter rendered', props)
-
 
   return (
     <>
@@ -43,12 +48,7 @@ const counter = (props) => {
   );
 }
 
-export const Counter = generalStore.connect(
-  counter,
-  [
-    'count',
-  ],
-)
+export const Counter = generalStore.connect(counter, listener)
 
 
 /**

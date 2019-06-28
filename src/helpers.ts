@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export type TkeyofT<T> = { [K in keyof T]: T[K] };
 
 export const objectKeys = <T>(obj: T & {}) => {
