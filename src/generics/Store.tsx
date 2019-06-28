@@ -1,14 +1,14 @@
-import React, { useState, useEffect, FunctionComponent, memo } from 'react'
+import React, { useState, useEffect, FunctionComponent, memo, ReactElement, NamedExoticComponent, PropsWithRef, PropsWithChildren } from 'react'
 
 import { EE } from './EventEmitter'
 import { memoize, TkeyofT } from '../helpers'
 import { ActionsCreator } from './ActionsCreator'
 
-export abstract class Store<ListenerObject extends Object> {
-  private _state: ListenerObject
+export abstract class Store<State extends Object> {
+  private _state: State
 
 
-  constructor(initialState: ListenerObject) {
+  constructor(initialState: State) {
     this._state = initialState
 
     EE.on('dispatch', ({ type, payload }) => {
@@ -27,9 +27,9 @@ export abstract class Store<ListenerObject extends Object> {
   }
 
 
-  public onChange = (cb: (store: ListenerObject) => void) => EE.on('store_change', cb)
+  public onChange = (cb: (state: State) => void) => EE.on('store_change', cb)
 
-  public useFlux: () => [ListenerObject, Store<ListenerObject>["onChange"]] = () => [this._state, this.onChange]
+  public useFlux: () => [State, Store<State>["onChange"]] = () => [this._state, this.onChange]
 
   /**
    * Connects component to store, when store changes, component's props get updated
@@ -37,8 +37,8 @@ export abstract class Store<ListenerObject extends Object> {
    * @param listenedKeys - keys of store that are gonna be listened to
    */
   public connect<Props>(
-    component: ConnectedStore<Props, ListenerObject>,
-    listenedKeys: Array<keyof ListenerObject>,
+    component: ConnectedStore<Props, State>,
+    listenedKeys: Array<keyof State>,
   ) {
     const MemoizedComponent = memo(component)
 
@@ -47,7 +47,7 @@ export abstract class Store<ListenerObject extends Object> {
     const memoizedStoreState = memoize(() => initialState, Object.values(initialState))
 
     // creates new component to add props and listen to changes
-    const ConnectedComponent: FunctionComponent<Props & { store?: ListenerObject }> = (props: Props) => {
+    const ConnectedComponent: FunctionComponent<Props & { store?: State }> = (props: Props) => {
       const [state, setState] = useState(initialState)
 
       const onStoreChange = () => this.onChange(newStoreState => {
@@ -64,33 +64,24 @@ export abstract class Store<ListenerObject extends Object> {
 
       useEffect(onStoreChange, [])
 
-      return <MemoizedComponent {...props} store={state as ListenerObject} />
-    }
-
-
-    if (!ConnectedComponent.defaultProps)
-      ConnectedComponent.defaultProps = {}
-
-    ConnectedComponent.defaultProps = {
-      ...ConnectedComponent.defaultProps,
-      store: listenedKeys
+      return <MemoizedComponent {...props} store={state as State} />
     }
 
     return ConnectedComponent
   }
 
-  public connect2<P, T>(
-    component: ConnectedStore<P, Partial<TkeyofT<T>>>,
-    listenerFn: storeListenerFn<ListenerObject, T>,
+  public connect2<T, P, S2 = {}, SS = any>(
+    component: FunctionComponent<P>,
+    listenerFn: storeListenerFn<State, T>,
   ) {
-    const MemoizedComponent = memo(component)
+    const MemoizedComponent = () => memo(component) as unknown as React.Component<P, S2, SS>
 
     // builds partial state from store and memoizes it
     const initialState = listenerFn(this.state)
     const memoizedStoreState = memoize(() => initialState, Object.values(initialState))
 
     // creates new component to add props and listen to changes
-    const ConnectedComponent: FunctionComponent<P & { store?: TkeyofT<T> }> = (props: P) => {
+    const ConnectedComponent: ConnectedPartialStore<P, { store?: TkeyofT<T> }> = (props: P) => {
       const [state, setState] = useState(initialState)
 
       const onStoreChange = () => this.onChange(newStoreState => {
@@ -107,7 +98,7 @@ export abstract class Store<ListenerObject extends Object> {
 
       useEffect(onStoreChange, [])
 
-      return <MemoizedComponent {...props} store={state} />
+      return <MemoizedComponent {...props} />
     }
 
 
@@ -119,20 +110,24 @@ export abstract class Store<ListenerObject extends Object> {
       store: listenerFn
     }
 
+
     return ConnectedComponent
   }
 
-  public createListener<T>(fn: storeListenerFn<ListenerObject, T>) {
-    return (s: ListenerObject) => fn(s)
+  public createListener<T>(fn: storeListenerFn<State, T>) {
+    return (s: State) => fn(s)
   }
 
   private _buildPartialFromKeys<T>(obj: T, keys: (keyof T)[]) {
     return keys.reduce((partial, key) => ({ ...partial, [key]: obj[key] }), {} as Partial<T>)
   }
 
-  abstract _reduce<T>(actions: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): ListenerObject
+  abstract _reduce<T>(actions: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): State
 }
 
 export type storeListenerFn<S, T> = (state: S) => TkeyofT<T>;
-export type ConnectedStoreProps<P, S> = P & { store: S }
+export type ConnectedStoreProps<P, S> = TkeyofT<P> & { store: S }
+type ConnectedPartialStoreProps<P, S> = TkeyofT<P> & { store?: S }
+
 export type ConnectedStore<P, S> = FunctionComponent<ConnectedStoreProps<P, S>>
+type ConnectedPartialStore<P, S> = FunctionComponent<ConnectedPartialStoreProps<P, S>>

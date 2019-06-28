@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useActions } from '../flux/Actions';
 import { generalStore } from '../flux/GeneralStore';
-import {  ConnectedStoreProps } from '../generics/Store';
+import { ConnectedStoreProps } from '../generics/Store';
 
 const asd = generalStore.createListener(state => ({
   nice: state.word
