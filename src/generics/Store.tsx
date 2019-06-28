@@ -40,6 +40,7 @@ export abstract class Store<State extends Object> {
     Component: FunctionComponent<P>,
     listenerFn: storeListenerFn<State, T>,
   ) {
+    // Memoizes component
     const MemoizedComponent = memo(Component) as unknown as FunctionComponent<Omit<P, "store">>
 
     // builds partial state from store and memoizes it
@@ -64,9 +65,12 @@ export abstract class Store<State extends Object> {
 
       useEffect(onStoreChange, [])
 
-      const newProps: Omit<P, "store"> = { ...props, store: state }
-
-      return <MemoizedComponent {...newProps} />
+      return (
+        <MemoizedComponent
+          store={state}
+          {...props}
+        />
+      )
     }
 
 
