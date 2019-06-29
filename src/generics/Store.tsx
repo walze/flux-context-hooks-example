@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FunctionComponent, memo, ComponentType } from 'react'
+import React, { useState, useEffect, memo, ComponentType } from 'react'
 
 import { EE } from './EventEmitter'
 import { memoize, TkeyofT } from '../helpers'
@@ -48,18 +48,18 @@ export abstract class Store<State extends Object> {
    * @param listenedKeys - keys of store that are gonna be listened to
    */
   public connect<P, T>(
-    component: FunctionComponent<P> | ComponentType<P>,
+    component: ComponentType<P>,
     listenerFn: storeListenerFn<State, T>,
   ) {
     // Memoizes component
-    const MemoizedComponent = memo(component) as unknown as FunctionComponent<Omit<P, "store">>
+    const MemoizedComponent = memo(component) as unknown as ComponentType<Omit<P, "store">>
 
     // builds partial state from store and memoizes it
     const initialState = listenerFn(this.state)
     const memoizedStoreState = memoize(() => initialState, Object.values(initialState))
 
     // creates new component to add props and listen to changes
-    const ConnectedComponent: FunctionComponent<Omit<P, "store">> = props => {
+    const ConnectedComponent: ComponentType<Omit<P, "store">> = props => {
       const [state, setState] = useState(initialState)
 
       const onStoreChange = () => this.onChange(newStoreState => {
@@ -97,4 +97,4 @@ export abstract class Store<State extends Object> {
 
 export type storeListenerFn<S, T> = (state: S) => TkeyofT<T>;
 export type ConnectedStoreProps<Props, Listener> = TkeyofT<Props> & { store: Listener }
-export type ConnectedStore<P, S> = FunctionComponent<ConnectedStoreProps<P, S>>
+export type ConnectedStore<P, S> = ComponentType<ConnectedStoreProps<P, S>>
