@@ -7,12 +7,10 @@ const ACTION_TYPES_DECLARATIONS = {
   REPEAT_WORD: '',
 }
 
-const actions = new ActionsCreator(ACTION_TYPES_DECLARATIONS)
-
 export const {
   ACTIONS_DECLARATIONS,
-  ACTION_TYPES_ARRAY,
-  useActions,
   ACTION_TYPES,
+  ACTION_TYPES_ARRAY,
   batchDispatch,
-} = actions
+  useActions,
+} = new ActionsCreator(ACTION_TYPES_DECLARATIONS)

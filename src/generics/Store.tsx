@@ -48,7 +48,7 @@ export abstract class Store<State extends Object> {
    * @param listenedKeys - keys of store that are gonna be listened to
    */
   public connect<P, T>(
-    component: ComponentType<P>,
+    component: ComponentType<ConnectedStoreProps<P, T>>,
     listenerFn: storeListenerFn<State, T>,
   ) {
     // Memoizes component
