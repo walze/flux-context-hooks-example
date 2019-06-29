@@ -7,18 +7,19 @@ const listener = generalStore.createListener(state => ({
   word: state.word
 }))
 
+const { REPEAT_WORD } = useActions();
+
 class repeater extends Component<ConnectedStoreProps<IRepeaterProps, ReturnType<typeof listener>>> {
   state = {
     word: this.props.word
   }
 
+  localClick = () => this.setState({ word: this.state.word + this.state.word })
+  globalClick = () => REPEAT_WORD(this.props.store.word + this.props.store.word)
+
   render() {
     const { props } = this
     const { store } = props
-    const { REPEAT_WORD } = useActions();
-
-    const localClick = () => this.setState({ word: this.state.word + this.state.word })
-    const globalClick = () => REPEAT_WORD(store.word + store.word)
 
     const storeJSON = JSON.stringify(store)
 
@@ -31,12 +32,12 @@ class repeater extends Component<ConnectedStoreProps<IRepeaterProps, ReturnType<
         <br />
         <br />
 
-        <button onClick={globalClick}>repeat global</button>
+        <button onClick={this.globalClick}>repeat global</button>
         <code>Word - {store.word}</code>
 
         <br />
 
-        <button onClick={localClick}>repeat word</button>
+        <button onClick={this.localClick}>repeat word</button>
         <code>Local Word - {this.state.word}</code>
 
         <br />
