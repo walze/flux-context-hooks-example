@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FunctionComponent, memo } from 'react'
+import React, { useState, useEffect, FunctionComponent, memo, ComponentType } from 'react'
 
 import { EE } from './EventEmitter'
 import { memoize, TkeyofT } from '../helpers'
@@ -22,26 +22,37 @@ export abstract class Store<State extends Object> {
   }
 
 
+  /**
+   * Returns a copy of store's state
+   */
   get state() {
     return { ...this._state }
   }
 
-
+  /**
+   * Calls the callback argument everytime the store changes
+   * @returns unsubscribe function
+   */
   public onChange = (cb: (state: State) => void) => EE.on('store_change', cb)
 
+
+  /**
+   * Hooks that returns state and onChange
+   */
   public useFlux: () => [State, Store<State>["onChange"]] = () => [this._state, this.onChange]
+
 
   /**
    * Connects component to store, when store changes, component's props get updated
-   * @param Component - component to be connected
+   * @param component - component to be connected
    * @param listenedKeys - keys of store that are gonna be listened to
    */
   public connect<P, T>(
-    Component: FunctionComponent<P>,
+    component: FunctionComponent<P> | ComponentType<P>,
     listenerFn: storeListenerFn<State, T>,
   ) {
     // Memoizes component
-    const MemoizedComponent = memo(Component) as unknown as FunctionComponent<Omit<P, "store">>
+    const MemoizedComponent = memo(component) as unknown as FunctionComponent<Omit<P, "store">>
 
     // builds partial state from store and memoizes it
     const initialState = listenerFn(this.state)
