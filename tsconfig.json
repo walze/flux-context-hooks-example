@@ -1,6 +1,7 @@
 {
   "exclude": [
     "./dist",
+    "./build",
     "./tsc"
   ],
   "compilerOptions": {
