@@ -12,10 +12,9 @@ export abstract class Store<State extends Object> {
     this._state = initialState
 
     EE.on('dispatch', async ({ type, payload }) => {
-      if (type !== 'BATCH_DISPATCH')
-        this._state = await this._reduce({ [type]: payload })
-      else
-        this._state = await this._reduce(payload)
+      this._state = await (type !== 'BATCH_DISPATCH'
+        ? this._reduce({ [type]: payload })
+        : this._reduce(payload))
 
       EE.emit('store_change', this._state)
     })
@@ -92,7 +91,7 @@ export abstract class Store<State extends Object> {
     return (s: State) => fn(s)
   }
 
-  abstract _reduce<T>(ACTIONS: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): State
+  abstract async _reduce<T>(ACTIONS: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): Promise<State>
 }
 
 export type storeListenerFn<S, T> = (state: S) => TkeyofT<T>;
