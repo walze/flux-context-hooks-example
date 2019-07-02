@@ -1,11 +1,18 @@
-import { objectKeys, ParamsType, objectEntries } from "../helpers";
+import { ParamsType, objectEntries } from "../helpers";
 import { dispatch } from "./dispatcher";
 
 
-export type IDecoratedActions<T> = {
+export type IActionsType<T> = {
     [K in keyof T]: (payload: T[K] extends (...args: any) => any ? ParamsType<T[K]> : T[K]) => void
 }
 
+export type IBatchType<T> = Partial<{
+    [K in keyof T]: T[K] extends (...args: any) => any ? ParamsType<T[K]> : T[K]
+}>
+
+export type IReducerActions<T> = Partial<{
+    [K in keyof T]: T[K] extends (...args: any) => any ? ReturnType<T[K]> : T[K]
+}>
 
 export class ActionsCreator<T> {
 
@@ -13,7 +20,7 @@ export class ActionsCreator<T> {
     public ACTION_TYPES_ARRAY: Extract<keyof T, string>[]
     public ACTION_TYPES: { [K in keyof T]: K; };
     public ACTIONS_ENTRIES: [Extract<keyof T, string>, T[keyof T]][]
-    public useActions: () => IDecoratedActions<T>;
+    public useActions: () => IActionsType<T>;
 
     constructor(initialObject: T) {
         this.ACTIONS_DECLARATIONS = initialObject
@@ -27,7 +34,7 @@ export class ActionsCreator<T> {
             )
 
         this.useActions = (() => {
-            const reducedTypes: IDecoratedActions<T> = this._reduceTypes()
+            const reducedTypes: IActionsType<T> = this._reduceTypes()
 
             return () => reducedTypes
         })()
@@ -35,7 +42,7 @@ export class ActionsCreator<T> {
         console.log(this)
     }
 
-    public batchDispatch(payload: Partial<IDecoratedActions<T>>) {
+    public batchDispatch(payload: IBatchType<T>) {
         dispatch({
             type: 'BATCH_DISPATCH',
             payload,
@@ -53,7 +60,7 @@ export class ActionsCreator<T> {
 
                     return { ...acc, [type]: dispatchFn }
                 },
-                {} as IDecoratedActions<T>
+                {} as IActionsType<T>
             )
     }
 

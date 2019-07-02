@@ -20,3 +20,6 @@ export const {
   batchDispatch,
   useActions,
 } = new ActionsCreator(ACTION_TYPES_DECLARATIONS)
+
+// eslint-disable-next-line no-console
+console.log(useActions())

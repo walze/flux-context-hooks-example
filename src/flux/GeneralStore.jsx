@@ -20,9 +20,10 @@ export class GeneralStore extends Store {
   }
 
   /**
-   * @param { Partial<import('./Actions').ACTIONS_DECLARATIONS> } action
+   * @param { import('../generics/ActionsCreator')
+   *    .IReducerActions<typeof import('./Actions').ACTIONS_DECLARATIONS> } action
    */
-  _reduce(action) {
+  async _reduce(action) {
     const { state } = this
     const {
       ADD_COUNTER,
@@ -33,7 +34,7 @@ export class GeneralStore extends Store {
     console.log(action)
 
     if (GET_TODO) {
-      console.log(GET_TODO)
+      console.log(await GET_TODO)
     }
 
     if (ADD_COUNTER) {
