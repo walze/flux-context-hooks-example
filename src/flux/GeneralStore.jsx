@@ -4,6 +4,7 @@ import { Store } from '../generics/Store'
 const initialState = {
   count: 0,
   word: 'global',
+  todo: {},
   obj: {
     a: [],
     b: '2',
@@ -34,7 +35,7 @@ export class GeneralStore extends Store {
     console.log(action)
 
     if (GET_TODO) {
-      console.log(await GET_TODO)
+      state.todo = await GET_TODO
     }
 
     if (ADD_COUNTER) {
@@ -48,6 +49,5 @@ export class GeneralStore extends Store {
     return state
   }
 }
-
 
 export const generalStore = new GeneralStore()
