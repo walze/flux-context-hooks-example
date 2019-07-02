@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useActions } from '../flux/Actions';
+import { ACTIONS } from '../flux/Actions';
 import { generalStore } from '../flux/GeneralStore';
 
 const listener = generalStore.createListener(state => ({
@@ -13,7 +13,7 @@ const listener = generalStore.createListener(state => ({
  */
 const counter = (props) => {
   const { store, num } = props
-  const { ADD_COUNTER } = useActions();
+  const { ADD_COUNTER } = ACTIONS;
 
   const [localCount, setLocalCount] = useState(0)
   const localAdd = () => setLocalCount(localCount + localCount || 1)

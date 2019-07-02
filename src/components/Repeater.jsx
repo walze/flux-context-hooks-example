@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { useActions } from '../flux/Actions';
+import { ACTIONS } from '../flux/Actions';
 import { generalStore } from '../flux/GeneralStore';
 
 const listener = generalStore.createListener(state => ({
   word: state.word,
 }))
 
-const { REPEAT_WORD } = useActions();
+const { REPEAT_WORD } = ACTIONS;
 
 /**
  * @extends Component<IRepeaterProps>

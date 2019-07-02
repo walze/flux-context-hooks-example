@@ -20,7 +20,7 @@ export class ActionsCreator<T> {
     public ACTION_TYPES_ARRAY: Extract<keyof T, string>[]
     public ACTION_TYPES: { [K in keyof T]: K; };
     public ACTIONS_ENTRIES: [Extract<keyof T, string>, T[keyof T]][]
-    public useActions: () => IActionsType<T>;
+    public ACTIONS: IActionsType<T>;
 
     constructor(initialObject: T) {
         this.ACTIONS_DECLARATIONS = initialObject
@@ -33,11 +33,7 @@ export class ActionsCreator<T> {
                 {} as { [K in keyof T]: K },
             )
 
-        this.useActions = (() => {
-            const reducedTypes: IActionsType<T> = this._reduceTypes()
-
-            return () => reducedTypes
-        })()
+        this.ACTIONS = this._reduceTypes()
 
         console.log(this)
     }

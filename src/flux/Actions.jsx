@@ -18,8 +18,8 @@ export const {
   ACTION_TYPES,
   ACTION_TYPES_ARRAY,
   batchDispatch,
-  useActions,
+  ACTIONS,
 } = new ActionsCreator(ACTION_TYPES_DECLARATIONS)
 
 // eslint-disable-next-line no-console
-console.log(useActions())
+console.log(ACTIONS)

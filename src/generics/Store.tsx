@@ -92,7 +92,7 @@ export abstract class Store<State extends Object> {
     return (s: State) => fn(s)
   }
 
-  abstract _reduce<T>(actions: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): State
+  abstract _reduce<T>(ACTIONS: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): State
 }
 
 export type storeListenerFn<S, T> = (state: S) => TkeyofT<T>;

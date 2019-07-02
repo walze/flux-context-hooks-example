@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Counter } from './components/Counter'
 import { Repeater } from './components/Repeater'
-import { batchDispatch, useActions } from './flux/Actions';
+import { batchDispatch, ACTIONS } from './flux/Actions';
 import { generalStore } from './flux/GeneralStore';
 
-const { GET_TODO } = useActions();
+const { GET_TODO } = ACTIONS;
 
 const listener = generalStore.createListener(stt => ({
   todo: stt.todo,
