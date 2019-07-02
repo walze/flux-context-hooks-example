@@ -1,10 +1,16 @@
-import { ActionsCreator } from "../generics/ActionsCreator";
+import { ActionsCreator } from '../generics/ActionsCreator';
 
 
 const ACTION_TYPES_DECLARATIONS = {
   ADD_COUNTER: 0,
   REMOVE_COUNTER: 0,
   REPEAT_WORD: '',
+  /** @param {number} id */
+  GET_TODO(id) {
+    const api = `https://jsonplaceholder.typicode.com/todos/${id}`
+
+    return fetch(api).then(r => r.json())
+  },
 }
 
 export const {

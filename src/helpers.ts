@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+export type ParamsType<T extends (...args: any) => any> = T extends (...args: Array<infer R>) => any ? R : any
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export type TkeyofT<T> = { [K in keyof T]: T[K] };
 
@@ -13,7 +14,7 @@ export const objectKeys = <T>(obj: T & {}) => {
   return keys
 }
 
-export const objectEntries = <T>(obj: T) => Object.entries(obj) as Array<[keyof T, T[keyof T]]>
+export const objectEntries = <T>(obj: T) => Object.entries(obj) as Array<[Extract<keyof T, string>, T[keyof T]]>
 
 export function useForceUpdate() {
   const [value, set] = useState(true); //boolean state

@@ -11,11 +11,11 @@ export abstract class Store<State extends Object> {
   constructor(initialState: State) {
     this._state = initialState
 
-    EE.on('dispatch', ({ type, payload }) => {
+    EE.on('dispatch', async ({ type, payload }) => {
       if (type !== 'BATCH_DISPATCH')
-        this._state = this._reduce({ [type]: payload })
+        this._state = await this._reduce({ [type]: payload })
       else
-        this._state = this._reduce(payload)
+        this._state = await this._reduce(payload)
 
       EE.emit('store_change', this._state)
     })

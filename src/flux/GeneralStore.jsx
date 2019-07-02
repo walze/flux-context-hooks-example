@@ -27,8 +27,14 @@ export class GeneralStore extends Store {
     const {
       ADD_COUNTER,
       REPEAT_WORD,
+      GET_TODO,
     } = action
 
+    console.log(action)
+
+    if (GET_TODO) {
+      console.log(GET_TODO)
+    }
 
     if (ADD_COUNTER) {
       state.count += ADD_COUNTER
