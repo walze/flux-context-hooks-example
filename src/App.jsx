@@ -27,6 +27,8 @@ const app = (props) => {
 
   const inputChange = ({ target }) => setId(target.value)
 
+  console.log('app rendered')
+
   return (
     <>
       <div>
