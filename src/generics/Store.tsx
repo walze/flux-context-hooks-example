@@ -28,6 +28,7 @@ export abstract class Store<State extends Object> {
     return { ...this._state }
   }
 
+
   /**
    * Calls the callback argument everytime the store changes
    * @returns unsubscribe function
@@ -69,7 +70,7 @@ export abstract class Store<State extends Object> {
         const newState = memoizedStoreState(Object.values(newValues), () => newValues)
 
         // updates state depending if changed
-        if (newState !== state)
+        if (!Object.is(newState, state))
           setState(newState)
       })
 
@@ -87,6 +88,10 @@ export abstract class Store<State extends Object> {
     return ConnectedComponent
   }
 
+  /**
+   * Helper to create listener in non-typescript code
+   * @param fn - funcions that returns listener
+   */
   public createListener<T>(fn: storeListenerFn<State, T>) {
     return (s: State) => fn(s)
   }
