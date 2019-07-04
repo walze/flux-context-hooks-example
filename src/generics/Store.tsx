@@ -4,6 +4,25 @@ import { EE } from './EventEmitter'
 import { memoize, TkeyofT } from '../helpers'
 import { ActionsCreator } from './ActionsCreator'
 
+// const count = useStoreState(generalStore, () => generalStore.state.count)
+// const count = useStoreState(generalStore, state => state.count)
+
+export const useStoreState = <S, T>(store: Store<S>, cb: (state: S) => T) => {
+  const { state, onChange } = store
+  const [storeState, setState] = useState(cb(state))
+
+  useEffect(
+    () => onChange((newState) => {
+      const newCallback = cb(newState)
+
+      !Object.is(storeState, newCallback) && setState(newCallback)
+    }),
+    []
+  )
+
+  return storeState
+}
+
 export abstract class Store<State extends Object> {
   private _state: State
 

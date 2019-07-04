@@ -6,6 +6,7 @@ const listener = generalStore.createListener(state => ({
   count: state.count,
 }))
 
+
 /**
  * @param { import('../generics/Store')
  *    .ConnectedStoreProps<ICounterProps, ReturnType<typeof listener>>
