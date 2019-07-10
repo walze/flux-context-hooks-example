@@ -1,0 +1,25 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:all"
+    ],
+    "jsRules": {},
+    "rules": {
+        "object-literal-sort-keys": false,
+        "comment-format": false,
+        "ordered-imports": false,
+        "quotemark": false,
+        "semicolon": false,
+        "typedef": false,
+        "curly": false,
+        "no-consecutive-blank-lines": false,
+        "completed-docs": false,
+        "variable-name": false,
+        "file-name-casing": [
+            false,
+            "kebab-case"
+        ],
+        "no-object-literal-type-assertion": false
+    },
+    "rulesDirectory": []
+}

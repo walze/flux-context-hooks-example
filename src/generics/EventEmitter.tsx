@@ -1,27 +1,39 @@
+import { ActionsCreator } from "./ActionsCreator";
+
+export interface IDispatch<T> {
+  payload: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>;
+  type: string;
+}
+
+// tslint:disable-next-line: no-any
+type Func = (...args: any[]) => void
+interface IEvent { [K: string]: Func[] }
+
 class EventEmitter {
 
-  private _events: { [K: string]: Function[] } = {}
+  private readonly _events: IEvent = {}
 
-  on(event: string, listener: (...args: any[]) => any) { // add event listeners
-    if (!this._events[event]) { this._events[event] = [] }
-
-    this._events[event].push(listener);
-
-    return () => this.off(event, listener)
+  public emit(event: keyof IEvent, ...payload: unknown[]) { // trigger events
+    for (const listener of this._events[event]) {
+      listener.apply(this, payload)
+    }
   }
 
-  off(event: string, listener: Function) { // remove listeners
-    const index = this._events[event].findIndex(l => l === listener)
+  public off(event: keyof IEvent, listener: Func) { // remove listeners
+    const index = this._events[event].findIndex((l) => Object.is(l, listener))
 
     if (!(index > -1)) throw new Error('Listener not found')
 
     this._events[event].splice(index, 1);
   }
 
-  emit(event: string, ...payload: unknown[]) { // trigger events
-    for (const listener of this._events[event]) {
-      listener.apply(this, payload)
-    }
+  public on(event: keyof IEvent, listener: Func) { // add event listeners
+    if ((typeof this._events[event]) === 'undefined')
+      this._events[event] = []
+
+    this._events[event].push(listener);
+
+    return () => { this.off(event, listener) }
   }
 }
 

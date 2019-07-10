@@ -1,13 +1,16 @@
 import React, { useState, useEffect, memo, ComponentType } from 'react'
 
-import { EE } from './EventEmitter'
+import { EE, IDispatch } from './EventEmitter'
 import { memoize, TkeyofT } from '../helpers'
 import { ActionsCreator } from './ActionsCreator'
 
 // const count = useStoreState(generalStore, () => generalStore.state.count)
 // const count = useStoreState(generalStore, state => state.count)
 
-export const useStoreState = <S, T>(store: Store<S>, cb: (state: S) => T) => {
+export const useStoreState = <S extends object, T>(
+  store: Store<S>,
+  cb: (state: S) => T,
+) => {
   const { state, onChange } = store
   const [storeState, setState] = useState(cb(state))
 
@@ -15,50 +18,41 @@ export const useStoreState = <S, T>(store: Store<S>, cb: (state: S) => T) => {
     () => onChange((newState) => {
       const newCallback = cb(newState)
 
-      !Object.is(storeState, newCallback) && setState(newCallback)
+      if (!Object.is(storeState, newCallback))
+        setState(newCallback)
     }),
-    []
+    [],
   )
 
   return storeState
 }
 
-export abstract class Store<State extends Object> {
-  private _state: State
-
-
-  constructor(initialState: State) {
-    this._state = initialState
-
-    EE.on('dispatch', async ({ type, payload }) => {
-      this._state = await (type !== 'BATCH_DISPATCH'
-        ? this._reduce({ [type]: payload })
-        : this._reduce(payload))
-
-      EE.emit('store_change', this._state)
-    })
-  }
-
-
+export abstract class Store<State extends object> {
   /**
    * Returns a copy of store's state
    */
-  get state() {
+  public get state() {
     return { ...this._state }
   }
 
 
-  /**
-   * Calls the callback argument everytime the store changes
-   * @returns unsubscribe function
-   */
-  public onChange = (cb: (state: State) => void) => EE.on('store_change', cb)
+  private _state: State
 
 
-  /**
-   * Hooks that returns state and onChange
-   */
-  public useFlux: () => [State, Store<State>["onChange"]] = () => [this._state, this.onChange]
+  public constructor(initialState: State) {
+    this._state = initialState
+
+    EE.on('dispatch', async ({ type, payload }: IDispatch<unknown>) => {
+      const newState = type !== 'BATCH_DISPATCH'
+        ? this._reduce({ [type]: payload })
+        : this._reduce(payload)
+
+      this._state = await newState
+      EE.emit('store_change', await newState)
+    })
+  }
+
+
 
 
   /**
@@ -78,10 +72,10 @@ export abstract class Store<State extends Object> {
     const memoizedStoreState = memoize(() => initialState, Object.values(initialState))
 
     // creates new component to add props and listen to changes
-    const ConnectedComponent: ComponentType<Omit<P, "store">> = props => {
+    const ConnectedComponent: ComponentType<Omit<P, "store">> = (props) => {
       const [state, setState] = useState(initialState)
 
-      const onStoreChange = () => this.onChange(newStoreState => {
+      const onStoreChange = () => this.onChange((newStoreState) => {
         // intersects new store state with keys listened
         const newValues = listenerFn(newStoreState)
 
@@ -107,15 +101,28 @@ export abstract class Store<State extends Object> {
     return ConnectedComponent
   }
 
+
   /**
    * Helper to create listener in non-typescript code
    * @param fn - funcions that returns listener
    */
-  public createListener<T>(fn: storeListenerFn<State, T>) {
-    return (s: State) => fn(s)
-  }
+  public createListener = <T, _>(fn: storeListenerFn<State, T>) => fn
 
-  abstract async _reduce<T>(ACTIONS: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): Promise<State>
+
+  /**
+   * Calls the callback argument everytime the store changes
+   * @returns unsubscribe function
+   */
+  public onChange = (cb: (state: State) => void) => EE.on('store_change', cb)
+
+
+  /**
+   * Hooks that returns state and onChange
+   */
+  public useFlux: () => [State, Store<State>["onChange"]] = () => [this._state, this.onChange]
+
+
+  protected abstract _reduce<T>(ACTIONS: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>): Promise<State>
 }
 
 export type storeListenerFn<S, T> = (state: S) => TkeyofT<T>;

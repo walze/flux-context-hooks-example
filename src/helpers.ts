@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-export type ParamsType<T extends (...args: any) => any> = T extends (...args: Array<infer R>) => any ? R : any
+export type ParamsType<T extends (...args: unknown[]) => unknown> = T extends (...args: Array<infer R>) =>
+  unknown
+  ? R
+  : unknown
+
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export type TkeyofT<T> = { [K in keyof T]: T[K] };
 
@@ -16,22 +20,24 @@ export const objectKeys = <T>(obj: T & {}) => {
 
 export const objectEntries = <T>(obj: T) => Object.entries(obj) as Array<[Extract<keyof T, string>, T[keyof T]]>
 
-export function useForceUpdate() {
+export const useForceUpdate = () => {
   const [value, set] = useState(true); //boolean state
-  return () => set(!value); // toggle the state to force render
+
+  return () => { set(!value) }; // toggle the state to force render
 }
 
-export function memoize<T, S>(oldCb: () => S, arr: T[]) {
+export const memoize = <T, S>(oldCb: () => S, arr: T[]) => {
   let oldVal = oldCb()
   let oldArr = arr
 
-  return <C>(newArr: T[], newCb?: () => C) => {
-    const someIsDifferent = oldArr.some((v, i) => newArr[i] !== v)
-    const callback = newCb || oldCb
+  return (newArr: T[], newCb?: typeof oldCb) => {
+    const someIsDifferent = oldArr.some((v, i) => !Object.is(newArr[i], v))
+    const callback = typeof newCb !== 'undefined' ? newCb : oldCb
 
     if (someIsDifferent) {
       oldArr = newArr
-      return oldVal = callback() as S
+
+      return oldVal = callback()
     }
 
     return oldVal

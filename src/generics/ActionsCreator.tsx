@@ -3,29 +3,29 @@ import { dispatch } from "./dispatcher";
 
 
 export type IActionsType<T> = {
-    [K in keyof T]: (payload: T[K] extends (...args: any) => any ? ParamsType<T[K]> : T[K]) => void
+    [K in keyof T]: (payload: T[K] extends (...args: unknown[]) => unknown ? ParamsType<T[K]> : T[K]) => void
 }
 
 export type IBatchType<T> = Partial<{
-    [K in keyof T]: T[K] extends (...args: any) => any ? ParamsType<T[K]> : T[K]
+    [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? ParamsType<T[K]> : T[K]
 }>
 
 export type IReducerActions<T> = Partial<{
-    [K in keyof T]: T[K] extends (...args: any) => any ? ReturnType<T[K]> : T[K]
+    [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? ReturnType<T[K]> : T[K]
 }>
 
 export class ActionsCreator<T> {
-
-    public ACTIONS_DECLARATIONS: T
-    public ACTION_TYPES_ARRAY: Extract<keyof T, string>[]
     public ACTION_TYPES: { [K in keyof T]: K; };
-    public ACTIONS_ENTRIES: [Extract<keyof T, string>, T[keyof T]][]
+    public ACTION_TYPES_ARRAY: Array<Extract<keyof T, string>>
     public ACTIONS: IActionsType<T>;
 
-    constructor(initialObject: T) {
+    public ACTIONS_DECLARATIONS: T
+    public ACTIONS_ENTRIES: Array<[Extract<keyof T, string>, T[keyof T]]>
+
+    public constructor(initialObject: T) {
         this.ACTIONS_DECLARATIONS = initialObject
         this.ACTIONS_ENTRIES = objectEntries(initialObject);
-        this.ACTION_TYPES_ARRAY = this.ACTIONS_ENTRIES.map(([key]) => key) as Extract<keyof T, string>[]
+        this.ACTION_TYPES_ARRAY = this.ACTIONS_ENTRIES.map(([key]) => key)
 
         this.ACTION_TYPES = this.ACTIONS_ENTRIES
             .reduce(
@@ -35,10 +35,11 @@ export class ActionsCreator<T> {
 
         this.ACTIONS = this._reduceTypes()
 
+        // tslint:disable-next-line: no-console
         console.log(this)
     }
 
-    public batchDispatch(payload: IBatchType<T>) {
+    public batchDispatch = (payload: IBatchType<T>) => {
         dispatch({
             type: 'BATCH_DISPATCH',
             payload,
@@ -50,13 +51,13 @@ export class ActionsCreator<T> {
             .ACTIONS_ENTRIES
             .reduce(
                 (acc, [type, value]) => {
-                    const dispatchFn = typeof value === 'function'
-                        ? (payload: unknown) => dispatch({ type, payload: value(payload) })
-                        : (payload: unknown) => dispatch({ type, payload })
+                    const dispatchFn = value instanceof Function
+                        ? (payload: Partial<unknown>) => { dispatch({ type, payload: value(payload) as T }) }
+                        : (payload: Partial<unknown>) => { dispatch({ type, payload }) }
 
                     return { ...acc, [type]: dispatchFn }
                 },
-                {} as IActionsType<T>
+                {} as IActionsType<T>,
             )
     }
 
