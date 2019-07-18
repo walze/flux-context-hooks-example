@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ACTIONS } from '../flux/Actions';
 import { generalStore } from '../flux/GeneralStore';
+import { loadable } from '../helpers';
 
 const listener = generalStore.createListener(state => ({
   count: state.count,
