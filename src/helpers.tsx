@@ -44,26 +44,28 @@ export const memoize = <T, S>(oldCb: () => S, arr: T[]) => {
   }
 }
 
-export const loadable = <P, P2>(
-  options: {
-    loading: ComponentType<P2>;
-    loaded(): Promise<ComponentType<P>>;
-  },
-): ComponentType<P> | ComponentType<P2> => {
+ // tslint:disable: no-redundant-jsdoc
 
-  const { loaded, loading } = options
+/**
+ * @template P, P2
+ * @param { () => Promise<ComponentType<P>> } loaded
+ * @param { ComponentType<P2> } loading
+ * @returns { ComponentType<P> | ComponentType<P2> }
+ */
+export const loadable = <P, P2>(
+  loaded: () => Promise<ComponentType<P>>,
+  loading: ComponentType<P2>,
+): ComponentType<P> | ComponentType<P2> => {
 
   class NewComponent extends Component<P | P2> {
     public state = {
-      element: loading as ComponentType<P2 | P>,
+      element: loading as ComponentType<P | P2>,
     }
 
     public async componentDidMount() {
       if (!Object.is(this.state.element, loading)) return
 
-      const element = await loaded()
-
-      this.setState({ element })
+      this.setState({ element: await loaded() })
     }
 
     public render() {
