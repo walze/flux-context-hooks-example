@@ -1,4 +1,4 @@
-import { EE, IDispatch } from './EventEmitter'
+import { EE, IDispatch, EVENTS } from './EventEmitter'
 
 
-export const dispatch = <T, _>(action: IDispatch<T>) => { EE.emit('dispatch', action) }
+export const dispatch = <T, _>(action: IDispatch<T>) => { EE.emit(EVENTS.DISPATCH, action) }

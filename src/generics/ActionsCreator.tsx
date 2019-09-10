@@ -1,5 +1,6 @@
 import { ParamsType, objectEntries } from "../helpers";
 import { dispatch } from "./dispatcher";
+import { EVENTS } from "./EventEmitter";
 
 
 export type IActionsType<T> = {
@@ -41,7 +42,7 @@ export class ActionsCreator<T> {
 
     public batchDispatch = (payload: IBatchType<T>) => {
         dispatch({
-            type: 'BATCH_DISPATCH',
+            type: EVENTS.BATCH_DISPATCH,
             payload,
         })
     }

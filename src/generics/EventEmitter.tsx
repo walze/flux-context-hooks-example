@@ -1,15 +1,23 @@
 import { ActionsCreator } from "./ActionsCreator";
+import { TkeyofT } from "../helpers";
+
+
+export enum EVENTS {
+  BATCH_DISPATCH,
+  DISPATCH,
+  STORE_CHANGE,
+}
 
 export interface IDispatch<T> {
   payload: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>;
-  type: string;
+  type: TkeyofT<EVENTS>;
 }
 
 // tslint:disable-next-line: no-any
 type Func = (...args: any[]) => void
 interface IEvent { [K: string]: Func[] }
 
-class EventEmitter {
+export class EventEmitter {
 
   private readonly _events: IEvent = {}
 
@@ -36,5 +44,6 @@ class EventEmitter {
     return () => { this.off(event, listener) }
   }
 }
+
 
 export const EE = new EventEmitter();

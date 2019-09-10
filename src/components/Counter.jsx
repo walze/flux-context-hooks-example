@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import { ACTIONS } from '../flux/Actions';
 import { generalStore } from '../flux/GeneralStore';
-
-const listener = generalStore.createListener(state => ({
-  count: state.count,
-}))
-
+import { connectStore } from '../generics/Store';
 
 /**
  * @param { import('../generics/Store')
@@ -49,7 +45,7 @@ const counter = (props) => {
   );
 }
 
-export const Counter = generalStore.connect(counter, listener)
+export const Counter = connectStore(generalStore, counter, ({ count }) => ({ count }))
 
 
 /**

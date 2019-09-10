@@ -1,53 +1,54 @@
-import { Store } from '../generics/Store'
+import { Store, createStore } from '../generics/Store'
 
+
+/**
+   * @param { import('../generics/ActionsCreator')
+   *    .IReducerActions<typeof import('./Actions').ACTIONS_DECLARATIONS> } action
+   * @param { typeof initialState } state
+   */
+async function _reduce(action, state) {
+  const {
+    ADD_COUNTER,
+    REPEAT_WORD,
+    GET_TODO,
+  } = action
+
+  console.log(action)
+
+  if (GET_TODO) {
+    state.todo = await GET_TODO
+  }
+
+  if (ADD_COUNTER) {
+    state.count += ADD_COUNTER
+  }
+
+  if (REPEAT_WORD) {
+    state.word += REPEAT_WORD
+  }
+
+  return state
+}
 
 const initialState = {
   count: 0,
-  word: 'global',
+  word: 'glo2bal',
   todo: {},
   obj: {
     a: [],
-    b: '2',
+    b: 'b',
   },
 }
 
-/**
- * @exports GeneralStore
- * @extends Store<typeof initialState>
- */
-export class GeneralStore extends Store {
-  constructor() {
-    super(initialState)
-  }
+export const generalStore = createStore(
+  initialState,
+  _reduce
+)
 
-  /**
-   * @param { import('../generics/ActionsCreator')
-   *    .IReducerActions<typeof import('./Actions').ACTIONS_DECLARATIONS> } action
-   */
-  async _reduce(action) {
-    const { state } = this
-    const {
-      ADD_COUNTER,
-      REPEAT_WORD,
-      GET_TODO,
-    } = action
 
-    console.log(action)
-
-    if (GET_TODO) {
-      state.todo = await GET_TODO
-    }
-
-    if (ADD_COUNTER) {
-      state.count += ADD_COUNTER
-    }
-
-    if (REPEAT_WORD) {
-      state.word += REPEAT_WORD
-    }
-
-    return state
-  }
+const { emitter, onChange, useStore } = generalStore
+export {
+  emitter,
+  onChange,
+  useStore,
 }
-
-export const generalStore = new GeneralStore()
