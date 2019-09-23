@@ -1,7 +1,7 @@
-import { ActionsCreator } from '../generics/ActionsCreator';
+import { createActions } from "../generics/ActionsCreator"
 
 
-const ACTION_TYPES_DECLARATIONS = {
+export const ACTION_TYPES_DECLARATIONS = {
   ADD_COUNTER: 0,
   REMOVE_COUNTER: 0,
   REPEAT_WORD: '',
@@ -13,13 +13,13 @@ const ACTION_TYPES_DECLARATIONS = {
   },
 }
 
+
+
+
 export const {
-  ACTIONS_DECLARATIONS,
-  ACTION_TYPES,
-  ACTION_TYPES_ARRAY,
   batchDispatch,
-  ACTIONS,
-} = new ActionsCreator(ACTION_TYPES_DECLARATIONS)
+  Actions: ACTIONS,
+} = createActions(ACTION_TYPES_DECLARATIONS)
 
 // eslint-disable-next-line no-console
 console.log(ACTIONS)

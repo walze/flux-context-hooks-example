@@ -3,7 +3,7 @@ import { Store, createStore } from '../generics/Store'
 
 /**
    * @param { import('../generics/ActionsCreator')
-   *    .IReducerActions<typeof import('./Actions').ACTIONS_DECLARATIONS> } action
+   *    .IReducerActions<typeof import('./Actions').ACTION_TYPES_DECLARATIONS> } action
    * @param { typeof initialState } state
    */
 async function _reduce(action, state) {

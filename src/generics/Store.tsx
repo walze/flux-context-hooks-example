@@ -1,8 +1,7 @@
 import React, { useState, useEffect, memo, ComponentType } from 'react'
 
-import { IDispatch, EVENTS, EventEmitter } from './EventEmitter'
+import { IDispatch, EVENTS, EventEmitter, EE } from './EventEmitter'
 import { memoize, TkeyofT } from '../helpers'
-import { ActionsCreator } from './ActionsCreator'
 
 // const count = useStoreState(generalStore, () => generalStore.state.count)
 // const count = useStoreState(generalStore, state => state.count)
@@ -38,9 +37,9 @@ export const useStoreState = <S, T>(
 
 export const createStore = <State extends object>(
   _state: State,
-  _reduce: <T>(actions: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>, state: State) => Promise<State>,
+  _reduce: <T>(actions: Partial<T>, state: State) => Promise<State>,
 ): IStore<State> => {
-  const emitter = new EventEmitter()
+  const emitter = EE
   /** Returns remover */
   const onChange = (cb: (state: State) => void) => emitter.on(EVENTS.STORE_CHANGE, cb)
 
@@ -51,8 +50,8 @@ export const createStore = <State extends object>(
       () => {
         const onDispatch = async ({ type, payload }: IDispatch<unknown>) => {
           const newStatePromise = Object.is(type, EVENTS.BATCH_DISPATCH)
-            ? _reduce({ [type]: payload }, state)
-            : _reduce(payload, state)
+            ? _reduce({ ...payload }, state)
+            : _reduce({ [type]: payload }, state)
 
           const newState = { ...(await newStatePromise) }
 

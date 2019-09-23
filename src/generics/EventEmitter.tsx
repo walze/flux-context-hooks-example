@@ -1,7 +1,3 @@
-import { ActionsCreator } from "./ActionsCreator";
-import { TkeyofT } from "../helpers";
-
-
 export enum EVENTS {
   BATCH_DISPATCH,
   DISPATCH,
@@ -9,8 +5,8 @@ export enum EVENTS {
 }
 
 export interface IDispatch<T> {
-  payload: Partial<ActionsCreator<T>["ACTIONS_DECLARATIONS"]>;
-  type: TkeyofT<EVENTS>;
+  payload: Partial<T>;
+  type: keyof T | EVENTS;
 }
 
 // tslint:disable-next-line: no-any
@@ -22,12 +18,16 @@ export class EventEmitter {
   private readonly _events: IEvent = {}
 
   public emit(event: keyof IEvent, ...payload: unknown[]) { // trigger events
+    if (!(event in this._events)) return
+
     for (const listener of this._events[event]) {
       listener.apply(this, payload)
     }
   }
 
   public off(event: keyof IEvent, listener: Func) { // remove listeners
+    if (!(event in this._events)) return
+
     const index = this._events[event].findIndex((l) => Object.is(l, listener))
 
     if (!(index > -1)) throw new Error('Listener not found')
