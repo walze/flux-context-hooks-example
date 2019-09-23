@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Repeater } from './components/Repeater'
-import { batchDispatch, ACTIONS } from './flux/Actions';
-import { generalStore } from './flux/GeneralStore';
-import { loadable } from './helpers';
-import { useStoreState } from './generics/Store';
+import { batchDispatch, ACTIONS } from './flux/Actions'
+import { generalStore } from './flux/GeneralStore'
+import { loadable } from '../lib/helpers'
+import { useStoreState } from '../lib/Store'
 
-const { GET_TODO } = ACTIONS;
+const { GET_TODO } = ACTIONS
 
 const Loading = ({ string }) => <div>{string}</div>
 

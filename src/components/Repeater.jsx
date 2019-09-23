@@ -1,9 +1,9 @@
 import React, { Component, useState } from 'react'
 import { ACTIONS } from '../flux/Actions'
 import { useStore, generalStore } from '../flux/GeneralStore'
-import { connectStore } from '../generics/Store';
+import { connectStore } from '../../lib/Store'
 
-const { REPEAT_WORD } = ACTIONS;
+const { REPEAT_WORD } = ACTIONS
 
 /**
  * @extends Component<IRepeaterProps>
@@ -44,8 +44,12 @@ const repeater = (props) => {
       <br />
       <br />
     </>
-  );
+  )
 }
 
 
-export const Repeater = connectStore(generalStore, repeater, ({ word }) => ({ word }))
+export const Repeater = connectStore(
+  generalStore,
+  ({ word }) => ({ word }),
+  repeater,
+)

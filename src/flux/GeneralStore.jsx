@@ -1,8 +1,8 @@
-import { Store, createStore } from '../generics/Store'
+import { Store, createStore } from '../../lib/Store'
 
 
 /**
-   * @param { import('../generics/ActionsCreator')
+   * @param { import('../../lib/ActionsCreator')
    *    .IReducerActions<typeof import('./Actions').ACTION_TYPES_DECLARATIONS> } action
    * @param { typeof initialState } state
    */

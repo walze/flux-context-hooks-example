@@ -1,4 +1,4 @@
-import { ParamsType, objectEntries } from "../helpers"
+import { ParamsType, objectEntries } from "./helpers"
 import { dispatch } from "./dispatcher"
 import { EVENTS } from "./EventEmitter"
 

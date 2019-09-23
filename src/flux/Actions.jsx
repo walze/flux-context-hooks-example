@@ -1,4 +1,4 @@
-import { createActions } from "../generics/ActionsCreator"
+import { createActions } from "../../lib/ActionsCreator"
 
 
 export const ACTION_TYPES_DECLARATIONS = {

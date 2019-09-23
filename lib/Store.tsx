@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo, ComponentType } from 'react'
 
 import { IDispatch, EVENTS, EventEmitter, EE } from './EventEmitter'
-import { memoize, TkeyofT } from '../helpers'
+import { memoize, TkeyofT } from './helpers'
 
 // const count = useStoreState(generalStore, () => generalStore.state.count)
 // const count = useStoreState(generalStore, state => state.count)
@@ -77,20 +77,20 @@ export const createStore = <State extends object>(
  * @param component - component to be connected
  * @param listenedKeys - keys of store that are gonna be listened to
  */
-export const connectStore = <P, T, State>(
+export const connectStore = <Props, Listener, State>(
   store: IStore<State>,
-  component: ComponentType<ConnectedStoreProps<P, T>>,
-  listenerFn: storeListenerFn<State, T>,
+  listenerFn: storeListenerFn<State, Listener>,
+  component: ComponentType<ConnectedStoreProps<Props, Listener>>,
 ) => {
   // Memoizes component
-  const MemoizedComponent = memo(component) as unknown as ComponentType<Omit<P, "store">>
+  const MemoizedComponent = memo(component) as unknown as ComponentType<Omit<Props, "store">>
 
   // builds partial state from store and memoizes it
   const initialState = listenerFn(store._state)
   const memoizedStoreState = memoize(() => initialState, Object.values(initialState))
 
   // creates new component to add props and listen to changes
-  const ConnectedComponent: ComponentType<Omit<P, "store">> = (props) => {
+  const ConnectedComponent: ComponentType<Omit<Props, "store">> = (props) => {
     const [state, setState] = useState(initialState)
 
     const onStoreChange = () => store.onChange((newStoreState) => {
